@@ -3,6 +3,12 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
+
+using std::map;
+using std::vector;
+using std::set;
+using std::string;
 
 struct letter_only: std::ctype<char> 
 {
@@ -18,13 +24,13 @@ struct letter_only: std::ctype<char>
     }
 };
 
-std::map<std::string, int> countWordsInFile(std::string filename) {
+map<string, int> countWordsInFile(string filename) {
      using namespace std;
      map<string, int> wordCount;
      ifstream input;
      input.imbue(std::locale(std::locale(), new letter_only())); //enable reading only letters!
      input.open(filename);
-     std::string word;
+     string word;
      while(input >> word)
      {
          ++wordCount[word];
@@ -38,12 +44,13 @@ std::map<std::string, int> countWordsInFile(std::string filename) {
      return wordCount;
 }
 
-std::map<string, int> countDocumentsContainingWords(std::vector< std::map<std::string, int> > wordCounts) {
+map<string, int> countDocumentsContainingWords(vector< map<string, int> >& wordCounts, set<string>& listOfWords) {
    using namespace std;
    map<string, int> documentCount;
    for(vector< map<string, int> >::iterator it = wordCounts.begin(); it != wordCounts.end(); ++it) {
       for(map<string,int>::iterator iter = (*it).begin(); iter != (*it).end(); ++iter) {
          ++documentCount[iter->first];
+         listOfWords.insert(iter->first);
       }
    }
 
@@ -52,9 +59,10 @@ std::map<string, int> countDocumentsContainingWords(std::vector< std::map<std::s
       cout << it->first << " : " << it->second << endl;
    }
    */
-   return 
+   return documentCount;
 }
 
+/*
 int main() {
    using namespace std;
    map<string, int> wordCount = countWordsInFile("file_hashing.cpp");
@@ -62,8 +70,12 @@ int main() {
    vector< map<string,int> > perFileWordCounts;
    perFileWordCounts.push_back(wordCount);
    perFileWordCounts.push_back(otherWordCount);
-   countDocumentsContainingWords(perFileWordCounts);
+   set<string> listOfWords;
+   countDocumentsContainingWords(perFileWordCounts, listOfWords);
 }
+*/
+
+
 
 
 
