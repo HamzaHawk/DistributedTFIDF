@@ -1,11 +1,10 @@
 /*
- *
+ * Distributed TF*IDF calculation using OpenMPI.
  */
 
 #include "mpitfidf.hpp"
 
 using namespace MPI;
-
 
 int main(int argc, char *argv[]) 
 {
@@ -23,7 +22,7 @@ int main(int argc, char *argv[])
    char *files[argc-1];
    int i;
       
-   for (i = 0; i < argc-1; i++) {
+   for (i = 0; i < numFiles; i++) {
       files[i] = argv[i+1];
    }
    
@@ -40,37 +39,39 @@ int main(int argc, char *argv[])
    if (me == MASTER) {
       printf("Divided files...\n");
    }
-
-   //get doc_count from each file
    
-   //combine doc counts from each node
+   for (i = 0; i < numFiles; i++) {
+      /* if index % numPRocs-1 +1 to omit master
+       */
+      if ((i%(numProcs-1) + 1) == me) {
+         //calculate tf for each document i
 
-   //get tf_max from each node
-
-
-   //combine tf_max into global max vectors
-
-
-   //IN CHILD NODE
+         //calculate max for each document 
+         
+         //send to master
+      }
+   }
    
-   //calc tf for each doc
-
-   //calc max for each word
-
-   //send doc count to master
-
-   //send max to doc count
-
-   //for d in D
-   //for w in d
-   //calc normalized tfidf
-
-   //output
    
+   if (me == MASTER) {
+      
+      //get doc_count from each file
+   
+      //combine doc counts from each node
+
+      //get tf_max from each node
 
 
+      //combine tf_max into global max vectors
+   } 
 
+   if (me != MASTER) {
+      //for d in D
+      //for w in d
+      //calc normalized tfidf
 
+      //output
+   }
 
    Finalize();
    return 0;
