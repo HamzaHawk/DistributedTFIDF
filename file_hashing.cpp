@@ -35,12 +35,12 @@ map<string, int> countWordsInFile(string filename) {
      {
          ++wordCount[word];
      }
-     /* Print code for debugging purposes.
-     for (std::map<std::string, int>::iterator it = wordCount.begin(); it != wordCount.end(); ++it)
-     {
-           cout << it->first <<" : "<< it->second << endl;
-     }
-     */
+      // Print code for debugging purposes.
+     // for (std::map<std::string, int>::iterator it = wordCount.begin(); it != wordCount.end(); ++it)
+     // {
+     //       cout << it->first <<" : "<< it->second << endl;
+     // }
+     
      return wordCount;
 }
 
@@ -54,11 +54,11 @@ map<string, int> countDocumentsContainingWords(vector< map<string, int> >& wordC
       }
    }
 
-   /* Print code for debugging purposes.
-   for(map<string, int>::iterator it = documentCount.begin();it != documentCount.end(); ++it) {
-      cout << it->first << " : " << it->second << endl;
-   }
-   */
+    // Print code for debugging purposes.
+   // for(map<string, int>::iterator it = documentCount.begin();it != documentCount.end(); ++it) {
+   //    cout << it->first << " : " << it->second << endl;
+   // }
+   
    return documentCount;
 }
 
@@ -74,8 +74,6 @@ int main() {
    countDocumentsContainingWords(perFileWordCounts, listOfWords);
 }
 */
-
-
 
 
 
