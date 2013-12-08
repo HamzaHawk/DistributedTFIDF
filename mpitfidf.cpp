@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
    for (i = 0; i < numFiles; i++) {
       files[i] = argv[i+1];
    }
+
    
    //parse arguments
    Init(argc,argv);
@@ -34,6 +35,9 @@ int main(int argc, char *argv[])
       printf("Initialized...\n");
    }
 
+   if (me == MASTER) {
+      printf("numFiles: %d\n", numFiles);
+   }
 
    map <string, map <string, int> > fileCounts;
 
@@ -42,6 +46,8 @@ int main(int argc, char *argv[])
       for (i = 0; i < numFiles; i++) {
          // if index % numPRocs-1 +1 is equal to rank, process doc (omits master)
          if ((i%(numProcs-1) + 1) == me) {
+            printf("My Rank: %d, my files: %s\n", me, files[i]);
+            
             //read document calculate tf for each document i
             map<string, int> wordCount = countWordsInFile(files[i]);
             fileCounts[files[i]]=wordCount;
@@ -49,44 +55,46 @@ int main(int argc, char *argv[])
       }
 
       //call count documents with vector
-
       map <string, int> docCounts = countDocumentsContainingWords(fileCounts);
             
       //serialize
       int doc_size;
       char *doc_buf = map_serialize(docCounts, &doc_size);
+      printf("Sending document counts from %d\n", me);
+      
 
+      int doc_size_buf[2] = {doc_size, me};
+      
+      
       //send doc counts ot master
-      COMM_WORLD.Send(&doc_size, 1, MPI_INT, MASTER, me);
+      COMM_WORLD.Send(doc_size_buf, 2, MPI_INT, MASTER, 0);
       COMM_WORLD.Send(doc_buf, doc_size, MPI_BYTE,
                    MASTER, DOC_F_TYPE);
-
    }
-
-   int global_max_size;   
-   char *global_max_buf;
 
    int global_doc_size;   
    char *global_doc_buf;
    
    if (me == MASTER) {
       map <string, map <string, int> > doc_buffer_map;
-      int doc_buf_size;
+      int doc_buf_size[2];
       
       int rank;
+      printf("About to receive from master...\n");
       
       for (i = 0; i < numProcs-1; i++) {
          //get document counts from each node
-         COMM_WORLD.Recv(&doc_buf_size, 1, MPI_INT, MPI_ANY_SOURCE, rank);
+         COMM_WORLD.Recv(doc_buf_size, 2, MPI_INT, MPI_ANY_SOURCE, 0);
          int doc_type;
 
+         rank = doc_buf_size[1];
          //make rank a string
          std::stringstream ss;
          ss << rank;
          std::string temp = ss.str();
          
-         char *doc_buffer = (char *)malloc(doc_buf_size);         
-         COMM_WORLD.Recv(doc_buffer, doc_buf_size, MPI_BYTE, rank, doc_type);
+         char doc_buffer[doc_buf_size[0]];         
+         COMM_WORLD.Recv(doc_buffer, doc_buf_size[0], MPI_BYTE, rank, DOC_F_TYPE);
          
          //deserialize
          map <string, int> *doc_map = map_deserialize(doc_buffer);
@@ -99,21 +107,33 @@ int main(int argc, char *argv[])
       map <string, int> *global_doc_map = reduceDocumentFrequencies(doc_buffer_map);
 
       global_doc_buf = map_serialize(*global_doc_map, &global_doc_size);
+
+      printf("Global doc size: %d\n", global_doc_size);
       
    } 
+   
+   if (me == MASTER) {
+      printf("broadcasting....\n");
+   }
+   
    //broadcase global_doc_size
-   COMM_WORLD.Bcast(&global_doc_size, 1, MPI_INT, me);
+   COMM_WORLD.Bcast(&global_doc_size, 1, MPI_INT, MASTER);
    
    //malloc space for buffers
    if (me != MASTER) {
-      global_doc_buf = (char *)malloc(global_doc_size);
+      printf("rank: %d, Global doc size: %d\n", me, global_doc_size);
+      global_doc_buf = new char[global_doc_size];
+   }
+
+   if (me == MASTER) {
+      printf("broadcasting 2....\n");
    }
 
    //broadcast(global_doc_buf);
-   COMM_WORLD.Bcast(&global_doc_buf, global_doc_size, MPI_BYTE, me);
+   COMM_WORLD.Bcast(global_doc_buf, global_doc_size, MPI_BYTE, MASTER);
 
    if (me == MASTER) {
-      printf("Calculating and outputting...");
+      printf("Calculating and outputting...\n");
    }
 
    if (me != MASTER) {
@@ -121,15 +141,15 @@ int main(int argc, char *argv[])
       map <string, int> *global_doc_map = map_deserialize(global_doc_buf);
 
       //tfidf
+      printf("Calculating on node %d\n", me);
       calculateTFIDFAndOutput(fileCounts, *global_doc_map, numFiles);
       
    }
    
    if (me == MASTER) {
-      printf("Done.");
+      printf("Done.\n");
    }
 
    Finalize();
    return 0;
-   
 }
