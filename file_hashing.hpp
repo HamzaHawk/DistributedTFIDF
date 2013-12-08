@@ -13,7 +13,6 @@ using std::set;
 using std::string;
 
 map<string, int> countWordsInFile(string filename);
-map<string, int> countDocumentsContainingWords(map<string, map<string, int> >& wordCounts, set<string>& listOfWords);
-void generateVocabulary(map<string, map<string, int> >& wordCounts, set<string>& listOfWords);
+map<string, int> countDocumentsContainingWords(map<string, map<string, int> >& wordCounts);
 
 #endif

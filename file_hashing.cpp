@@ -34,13 +34,12 @@ map<string, int> countWordsInFile(string filename) {
      return wordCount;
 }
 
-map<string, int> countDocumentsContainingWords(map<string, map<string, int> >& wordCounts, set<string>& listOfWords) {
+map<string, int> countDocumentsContainingWords(map<string, map<string, int> >& wordCounts) {
    using namespace std;
    map<string, int> documentCount;
    for(map<string, map<string, int> >::iterator it = wordCounts.begin(); it != wordCounts.end(); ++it) {
       for(map<string,int>::iterator iter = (it->second).begin(); iter != (it->second).end(); ++iter) {
          ++documentCount[iter->first];
-         listOfWords.insert(iter->first);
       }
    }
 
@@ -51,30 +50,6 @@ map<string, int> countDocumentsContainingWords(map<string, map<string, int> >& w
    
    return documentCount;
 }
-
-void generateVocabulary(map<string, map<string, int> >& wordCounts, set<string>& listOfWords) {
-   using namespace std;
-   map<string, int> documentCount;
-   for(map<string, map<string, int> >::iterator it = wordCounts.begin(); it != wordCounts.end(); ++it) {
-      for(map<string,int>::iterator iter = (it->second).begin(); iter != (it->second).end(); ++iter) {
-         listOfWords.insert(iter->first);
-      }
-   }
-   return;
-}
-
-/*
-int main() {
-   using namespace std;
-   map<string, int> wordCount = countWordsInFile("file_hashing.cpp");
-   map<string, int> otherWordCount = countWordsInFile("file_hashing.hpp");
-   vector< map<string,int> > perFileWordCounts;
-   perFileWordCounts.push_back(wordCount);
-   perFileWordCounts.push_back(otherWordCount);
-   set<string> listOfWords;
-   countDocumentsContainingWords(perFileWordCounts, listOfWords);
-}
-*/
 
 
 
