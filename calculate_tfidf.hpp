@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <ios>
 
 using std::map;
 using std::string;
