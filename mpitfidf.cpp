@@ -60,21 +60,46 @@ int main(int argc, char *argv[])
       max_term_finder(fileCounts, listOfWords);
        
       //serialize
+      int max_size;
+      int doc_size;
 
-      //send to master
+      //TODO ADD CALL HERE
+      char *max_buf;
+      char *doc_buf;
+
+      //send to max master
+      COMM_WORLD.send(&max_count, 1, MPI_INT, MASTER, me);
+      COMM_WORLD.send(max_buf, &max_count, MPI_BYTE,
+                      MASTER, MAX_TF_TYPE);
       
+      //send doc counts ot master
+      COMM_WORLD.send(&doc_buf, 1, MPI_INT, MASTER, me);
+      COMM_WORLD.send(doc_size, &doc_size, MPI_BYTE,
+                   MASTER, DOC_F_TYPE);
    }
    
-   
-   
    if (me == MASTER) {
+      vector <map <string, int> > buffer;
+      int data_sizes[numProcs-1];
+      int buf;
+      int rank;
+            
+      for (i = 0; i < numProcs-1; i++) {
+         //receive size from child -- tag is rank of node
+         COMM_WORLD.recv(&buf, 1, MPI_INT, MPI_ANY_SOURCE, rank);
+         data_sizes[rank] = buf;
+      }
+
+      for (i = 0; i < numProcs-1; i++) {
+         
+      }
+      
       
       //get doc_count from each file
    
       //combine doc counts from each node
 
       //get tf_max from each node
-
 
       //combine tf_max into global max vectors
    } 

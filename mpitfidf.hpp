@@ -18,6 +18,10 @@
 #define SUCCESS 0
 #define FAILURE 1
 
+
+#define MAX_TF_TYPE 0
+#define DOC_F_TYPE 1
+
 using std::map;
 using std::vector;
 using std::set;
