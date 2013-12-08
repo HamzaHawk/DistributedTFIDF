@@ -12,6 +12,7 @@ char *map_serialize(map <string, int>& hash_map, int *out_size)
     int str_sizes = 0;
     int buf_size = 0;
 
+    // Iterate through map to count all string lengths
     typedef map<string, int>::iterator it_type;
     for(it_type iterator = hash_map.begin(); iterator != hash_map.end(); iterator++) {
 
@@ -19,15 +20,16 @@ char *map_serialize(map <string, int>& hash_map, int *out_size)
         str_sizes += word.length();
     }
 
-    // buf_size = length of all strings + length of all counts + all NULLs
-    // + an extra int in the beginning
+    // Buffer size = all string lengths + NULLs + counts + header int
     buf_size = str_sizes + (hash_map.size() * sizeof(int)) + hash_map.size();
     buf_size += sizeof(int);
     char *buf = (char*)calloc(1, buf_size);
 
-    // add the elem size to buf
+    // Add the elem size (header) to buf, advance ptr
     *((int*)buf) = hash_map.size();
     char *buf_ptr = buf+sizeof(int);
+
+    // Add all strings and counts
     for(it_type iterator = hash_map.begin(); iterator != hash_map.end(); iterator++) {
 
         string word = iterator->first;
@@ -45,6 +47,7 @@ char *map_serialize(map <string, int>& hash_map, int *out_size)
     //     printf("item %d) %x.\n", i, buf[i]);
     // }
 
+    // Set out_ptr to size of buffer
     *out_size = buf_size;
     return buf;
 }
@@ -52,16 +55,21 @@ char *map_serialize(map <string, int>& hash_map, int *out_size)
 
 map<string, int>* map_deserialize(char *buf)
 {
+    // Get header size (num elements), advance ptr
     int elem_size = *((int*)buf);
-    map<string, int> *ret_map = new map<string, int>();
-
     char *buf_ptr = buf+sizeof(int);
+
+    map<string, int> *ret_map = new map<string, int>();
     for (int i = 0; i < elem_size; i++) {
+        // Create string, advance ptr
         string str(buf_ptr);
         buf_ptr += str.length() + 1;
+
+        // Get count, advance ptr
         int count = *((int*)buf_ptr);
         buf_ptr += sizeof(int);
 
+        // Set entry in map
         (*ret_map)[str] = count;
     }
 
