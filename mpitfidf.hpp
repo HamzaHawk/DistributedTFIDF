@@ -19,8 +19,8 @@
 #define FAILURE 1
 
 
-#define MAX_TF_TYPE 0
-#define DOC_F_TYPE 1
+#define MAX_TF_TYPE 1000
+#define DOC_F_TYPE 1001
 
 using std::map;
 using std::vector;
