@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 
+#include "file_hashing.hpp"
 using std::map;
 using std::vector;
 using std::set;
