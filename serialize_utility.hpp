@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <cstdlib>
+#include <cstring>
 
 using std::map;
 using std::string;
