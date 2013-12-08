@@ -13,7 +13,6 @@
 #include <typeinfo>
 #include <utility>
 #include "file_hashing.hpp"
-#include "serialize_utility.hpp"
 
 using std::map;
 using std::string;
@@ -60,6 +59,4 @@ int main() {
    countDocumentsContainingWords(perFileWordCounts, listOfWords);
 
    map<string, int> *wordMaxes = max_term_finder(perFileWordCounts, listOfWords);
-
-   map_serialize(*wordMaxes);
 }
