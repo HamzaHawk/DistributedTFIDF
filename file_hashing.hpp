@@ -12,7 +12,7 @@ using std::vector;
 using std::set;
 using std::string;
 
-std::map<std::string, int> countWordsInFile(std::string filename);
-std::map<std::string, int> countDocumentsContainingWords(std::vector< std::map<std::string, int> >& wordCounts, std::set<std::string>& listOfWords);
+map<string, int> countWordsInFile(string filename);
+map<string, int> countDocumentsContainingWords(map<string, map<string, int> >& wordCounts, set<string>& listOfWords);
 
 #endif
