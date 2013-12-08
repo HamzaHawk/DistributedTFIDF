@@ -3,11 +3,6 @@
  */
 
 #include "mpitfidf.hpp"
-#include "file_hashing.hpp"
-#include "max_term_finder.hpp"
-#include "serialize_utility.hpp"
-#include "document_frequency.hpp"
-#include "calculate_tfidf.hpp"
 
 using namespace MPI;
 
@@ -125,11 +120,9 @@ int main(int argc, char *argv[])
       //deserialize doc_buf
       map <string, int> *global_doc_map = map_deserialize(global_doc_buf);
 
-      //TODO calculations
+      //tfidf
+      calculateTFIDFAndOutput(fileCounts, *global_doc_map, numFiles);
       
-      //calc TFIDF
-     
-      //output
    }
    
    if (me == MASTER) {
