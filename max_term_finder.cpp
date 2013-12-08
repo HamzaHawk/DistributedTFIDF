@@ -14,6 +14,7 @@
 #include <utility>
 #include "file_hashing.hpp"
 #include "serialize_utility.hpp"
+#include "calculate_tfidf.hpp"
 
 using std::map;
 using std::string;
@@ -40,11 +41,11 @@ map<string, int>* max_term_finder(map < string, map <string, int> > & wordCounts
         wordMaxes->insert(pair<string,int>(word, maxCount));
     }
 
-    cout << "Maxes:\n";
-    typedef map<string, int>::iterator it_type;
-    for(it_type iterator = (*wordMaxes).begin(); iterator != (*wordMaxes).end(); iterator++) {
-        cout << iterator->first << ": " << iterator->second << "\n";
-    }
+    // cout << "Maxes:\n";
+    // typedef map<string, int>::iterator it_type;
+    // for(it_type iterator = (*wordMaxes).begin(); iterator != (*wordMaxes).end(); iterator++) {
+    //     cout << iterator->first << ": " << iterator->second << "\n";
+    // }
 
     return wordMaxes;
 }
@@ -54,24 +55,24 @@ int main() {
    using namespace std;
    map<string, int> wordCount = countWordsInFile("file_hashing.cpp");
    map<string, int> otherWordCount = countWordsInFile("file_hashing.hpp");
-   map< string, map<string,int> > perFileWordCounts;
+   map<string, map<string,int> > perFileWordCounts;
    perFileWordCounts["file_hashing.cpp"] = wordCount;
    perFileWordCounts["file_hashing.hpp"] = otherWordCount;
    set<string> listOfWords;
-   countDocumentsContainingWords(perFileWordCounts, listOfWords);
+   map <string, int> docCounts = countDocumentsContainingWords(perFileWordCounts);
 
-   map<string, int> *wordMaxes = max_term_finder(perFileWordCounts, listOfWords);
+   calculateTFIDFAndOutput(perFileWordCounts, docCounts, 2);
 
-   int size;
-   char *buf = map_serialize(*wordMaxes, &size);
-   map<string, int> *wordMaxes2 = map_deserialize(buf);
+   // int size;
+   // char *buf = map_serialize(*wordMaxes, &size);
+   // map<string, int> *wordMaxes2 = map_deserialize(buf);
 
-   cout << "Element Size: " << size << "\n";
-   cout << "Hash Table Elements: " << "\n";
-   typedef map<string, int>::iterator it_type;
-    for(it_type iterator = (*wordMaxes2).begin(); iterator != (*wordMaxes2).end(); iterator++) {
-        cout << iterator->first << ": " << iterator->second << "\n";
-    }
+   // cout << "Element Size: " << size << "\n";
+   // cout << "Hash Table Elements: " << "\n";
+   // typedef map<string, int>::iterator it_type;
+   //  for(it_type iterator = (*wordMaxes2).begin(); iterator != (*wordMaxes2).end(); iterator++) {
+   //      cout << iterator->first << ": " << iterator->second << "\n";
+   //  }
 }
-*/
 
+*/
