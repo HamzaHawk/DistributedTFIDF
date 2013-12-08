@@ -13,6 +13,7 @@
 #include <typeinfo>
 #include <utility>
 #include "file_hashing.hpp"
+// #include "serialize_utility.hpp"
 
 using std::map;
 using std::string;
@@ -48,7 +49,8 @@ map<string, int>* max_term_finder(vector< map <string, int> >& wordCounts, set<s
     return wordMaxes;
 }
 
-/*int main() {
+/*
+int main() {
    using namespace std;
    map<string, int> wordCount = countWordsInFile("file_hashing.cpp");
    map<string, int> otherWordCount = countWordsInFile("file_hashing.hpp");
@@ -58,9 +60,17 @@ map<string, int>* max_term_finder(vector< map <string, int> >& wordCounts, set<s
    set<string> listOfWords;
    countDocumentsContainingWords(perFileWordCounts, listOfWords);
 
-
    map<string, int> *wordMaxes = max_term_finder(perFileWordCounts, listOfWords);
-}
 
-   map_serialize(*wordMaxes);
-   }*/
+   int size;
+   char *buf = map_serialize(*wordMaxes, &size);
+   map<string, int> *wordMaxes2 = map_deserialize(buf);
+
+   cout << "Element Size: " << size << "\n";
+   cout << "Hash Table Elements: " << "\n";
+   typedef map<string, int>::iterator it_type;
+    for(it_type iterator = (*wordMaxes2).begin(); iterator != (*wordMaxes2).end(); iterator++) {
+        cout << iterator->first << ": " << iterator->second << "\n";
+    }
+}
+*/
