@@ -12,7 +12,8 @@ void calculateTFIDFAndOutput(map<string, map<string, int> >& wordFrequencies, ma
     for (map_map_iterator mm_iter = normalizedWordFreqs.begin(); mm_iter != normalizedWordFreqs.end(); ++mm_iter) {
         string filename = mm_iter->first;
         ofstream output_file;
-        output_file.open("data/output/" + filename + "_tfidf.out", std::ios::out);
+        string newFname = "data/output/" + filename + "_tfidf.out";
+        output_file.open(newFname.c_str(), std::ios::out);
         //For each word in the file
         for(map_iterator m_iter = (mm_iter->second).begin(); m_iter != (mm_iter->second).end(); ++m_iter) {
             string word = m_iter->first;
