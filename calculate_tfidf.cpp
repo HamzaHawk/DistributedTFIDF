@@ -13,7 +13,7 @@ void calculateTFIDFAndOutput(map<string, map<string, int> >& wordFrequencies, ma
         string filename = mm_iter->first;
         ofstream output_file;
         unsigned found = filename.find_last_of("/\\");
-        string newFname = filename.substr(found+1) + "_tfidf.out";
+        string newFname = "data/output/" + filename.substr(found+1) + "_tfidf.out";
         printf("Writing to %s\n", newFname.c_str());
         output_file.open(newFname.c_str(), std::ios::out);
         //For each word in the file
