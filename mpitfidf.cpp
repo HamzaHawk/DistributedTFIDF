@@ -38,10 +38,6 @@ int main(int argc, char *argv[])
       printf("Initialized...\n");
    }
 
-   //divide up files
-   if (me == MASTER) {
-      printf("Divided files...\n");
-   }
 
    map <string, map <string, int> > fileCounts;
 
@@ -67,17 +63,17 @@ int main(int argc, char *argv[])
       int doc_size;
 
       //serialize data
-      char *max_buf = map_serialize(maxCounts, &max_size);
-      char *doc_buf = map_serialize(&docCounts, &doc_size);
+      char *max_buf = map_serialize(*maxCounts, &max_size);
+      char *doc_buf = map_serialize(docCounts, &doc_size);
 
       //send to max master
       COMM_WORLD.Send(&max_size, 1, MPI_INT, MASTER, me);
-      COMM_WORLD.Send(max_buf, &max_size, MPI_BYTE,
+      COMM_WORLD.Send(max_buf, max_size, MPI_BYTE,
                       MASTER, MAX_TF_TYPE);
       
       //send doc counts ot master
       COMM_WORLD.Send(&doc_size, 1, MPI_INT, MASTER, me);
-      COMM_WORLD.Send(doc_buf, &doc_size, MPI_BYTE,
+      COMM_WORLD.Send(doc_buf, doc_size, MPI_BYTE,
                    MASTER, DOC_F_TYPE);
 
    }
@@ -102,14 +98,17 @@ int main(int argc, char *argv[])
          COMM_WORLD.Recv(&max_buf_size, 1, MPI_INT, MPI_ANY_SOURCE, rank);
          int type;
          
-         char *max_buffer = (char *)malloc(buf_size);         
+         char *max_buffer = (char *)malloc(max_buf_size);         
          COMM_WORLD.Recv(max_buffer, max_buf_size, MPI_BYTE, rank, type);
 
          //deserialize
-         map <string, int> max_map = map_deserialize(max_buffer);
+         map <string, int> *max_map = map_deserialize(max_buffer);
+         
+         char *temp = itoa(rank);
+         string str_temp(temp);
          
          //add to map
-         max_buffer_map[std::to_string(rank)] = max_map;
+         max_buffer_map[str_temp] = *max_map;
          
          //get document counts from each node
          COMM_WORLD.Recv(&doc_buf_size, 1, MPI_INT, MPI_ANY_SOURCE, rank);
@@ -119,10 +118,10 @@ int main(int argc, char *argv[])
          COMM_WORLD.Recv(doc_buffer, doc_buf_size, MPI_BYTE, rank, doc_type);
          
          //deserialize
-         map <string, int> doc_map = map_deserialize(doc_buffer);
+         map <string, int> *doc_map = map_deserialize(doc_buffer);
 
          //add to vector
-         doc_buffer_map[std::to_string(rank)] = doc_map;
+         doc_buffer_map[str_temp] = *doc_map;
       }
       
       //user doc & max vector
@@ -132,9 +131,9 @@ int main(int argc, char *argv[])
       global_max_buf = map_serialize(global_max_map, &global_max_size);
       
       //document_freq
-      map <string, int> *global_doc_map = reduceDocumentFrequencies(doc_buffer_map);
+      map <string, int> *global_doc_map = reduceDocumentFrequencies(*doc_buffer_map);
 
-      global_doc_buf = map_serialized(global_doc_map, &global_doc_size);
+      global_doc_buf = map_serialize(global_doc_map, &global_doc_size);
       
    } 
 
@@ -166,7 +165,7 @@ int main(int argc, char *argv[])
       map <string, int> *global_max_map = map_deserialize(global_max_buf);
       
       //deserialize doc_buf
-      map <string, int> *global_doc_map = map_derserialize(global_doc_buf);
+      map <string, int> *global_doc_map = map_deserialize(global_doc_buf);
 
       //TODO calculations
       
