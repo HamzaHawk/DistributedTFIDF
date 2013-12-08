@@ -3,8 +3,15 @@
  */
 
 #include "mpitfidf.hpp"
+#include "file_hashing.hpp"
+#include "max_term_finder.hpp"
 
 using namespace MPI;
+using std::map;
+using std::vector;
+using std::set;
+using std::string;
+
 
 int main(int argc, char *argv[]) 
 {
@@ -39,18 +46,31 @@ int main(int argc, char *argv[])
    if (me == MASTER) {
       printf("Divided files...\n");
    }
-   
-   for (i = 0; i < numFiles; i++) {
-      /* if index % numPRocs-1 +1 to omit master
-       */
-      if ((i%(numProcs-1) + 1) == me) {
-         //calculate tf for each document i
 
-         //calculate max for each document 
-         
-         //send to master
+   if (me != MASTER) {
+      vector <map <string, int> > fileCounts;
+      
+      for (i = 0; i < numFiles; i++) {
+         // if index % numPRocs-1 +1 is equal to rank, process doc (omits master)
+         if ((i%(numProcs-1) + 1) == me) {
+            //read document calculate tf for each document i
+            map<string, int> wordCount = countWordsInFile(files[i]);
+            fileCounts.push_back(wordCount);
+         }
       }
+      //call count documents with vector
+      set<string> listOfWords;
+      countDocumentsContainingWords(fileCounts, listOfWords);
+            
+      //calculate max for each document 
+      max_term_finder(fileCounts, listOfWords);
+       
+      //serialize
+
+      //send to master
+      
    }
+   
    
    
    if (me == MASTER) {
