@@ -23,6 +23,12 @@
 #define MAX_TF_TYPE 1000
 #define DOC_F_TYPE 1001
 
+#include "file_hashing.hpp"
+#include "max_term_finder.hpp"
+#include "serialize_utility.hpp"
+#include "document_frequency.hpp"
+#include "calculate_tfidf.hpp"
+
 using std::map;
 using std::vector;
 using std::set;

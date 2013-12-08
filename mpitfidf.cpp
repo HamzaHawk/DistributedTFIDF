@@ -7,6 +7,7 @@
 #include "max_term_finder.hpp"
 #include "serialize_utility.hpp"
 #include "document_frequency.hpp"
+#include "calculate_tfidf.hpp"
 
 using namespace MPI;
 

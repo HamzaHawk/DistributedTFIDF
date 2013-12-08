@@ -5,8 +5,8 @@ LIBS=-lmpi
 
 all: mpitfidf.o
 
-mpitfidf.o: mpitfidf.cpp file_hashing.cpp max_term_finder.cpp document_frequency.cpp serialize_utility.cpp
-	$(CC) $(OBJ_FLAGS) mpitfidf.cpp file_hashing.cpp max_term_finder.cpp document_frequency.cpp serialize_utility.cpp
+mpitfidf.o: mpitfidf.cpp file_hashing.cpp max_term_finder.cpp document_frequency.cpp serialize_utility.cpp calculate_tfidf.cpp
+	$(CC) $(OBJ_FLAGS) mpitfidf.cpp file_hashing.cpp max_term_finder.cpp document_frequency.cpp serialize_utility.cpp calculate_tfidf.cpp
 
 clean:
 	rm -rf mpitfidf *.o
