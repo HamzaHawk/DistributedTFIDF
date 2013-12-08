@@ -34,11 +34,11 @@ map<string, int> countWordsInFile(string filename) {
      return wordCount;
 }
 
-map<string, int> countDocumentsContainingWords(vector< map<string, int> >& wordCounts, set<string>& listOfWords) {
+map<string, int> countDocumentsContainingWords(map<string, map<string, int> >& wordCounts, set<string>& listOfWords) {
    using namespace std;
    map<string, int> documentCount;
-   for(vector< map<string, int> >::iterator it = wordCounts.begin(); it != wordCounts.end(); ++it) {
-      for(map<string,int>::iterator iter = (*it).begin(); iter != (*it).end(); ++iter) {
+   for(map<string, map<string, int> >::iterator it = wordCounts.begin(); it != wordCounts.end(); ++it) {
+      for(map<string,int>::iterator iter = (it->second).begin(); iter != (it->second).end(); ++iter) {
          ++documentCount[iter->first];
          listOfWords.insert(iter->first);
       }
