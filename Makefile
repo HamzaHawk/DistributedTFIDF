@@ -3,10 +3,10 @@ CC=mpic++
 OBJ_FLAGS=-O -c -g
 LIBS=-lmpi
 
-all: mpitfidf
+all: mpitfidf.o
 
-mpitfidf.o: mpitfidf.cpp
-	$(CC) $(OBJ_FLAGS) mpitfidf.cpp
+mpitfidf.o: mpitfidf.cpp file_hashing.cpp max_term_finder.cpp
+	$(CC) $(OBJ_FLAGS) mpitfidf.cpp file_hashing.cpp max_term_finder.cpp
 
 clean:
 	rm -rf mpitfidf *.o

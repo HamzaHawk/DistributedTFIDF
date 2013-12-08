@@ -48,7 +48,7 @@ map<string, int>* max_term_finder(vector< map <string, int> >& wordCounts, set<s
     return wordMaxes;
 }
 
-int main() {
+/*int main() {
    using namespace std;
    map<string, int> wordCount = countWordsInFile("file_hashing.cpp");
    map<string, int> otherWordCount = countWordsInFile("file_hashing.hpp");
@@ -58,5 +58,9 @@ int main() {
    set<string> listOfWords;
    countDocumentsContainingWords(perFileWordCounts, listOfWords);
 
+
    map<string, int> *wordMaxes = max_term_finder(perFileWordCounts, listOfWords);
 }
+
+   map_serialize(*wordMaxes);
+   }*/
