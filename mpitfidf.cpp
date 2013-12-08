@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
 
    map <string, map <string, int> > fileCounts;
 
+
    if (me != MASTER) {
       for (i = 0; i < numFiles; i++) {
          // if index % numPRocs-1 +1 is equal to rank, process doc (omits master)
@@ -104,11 +105,14 @@ int main(int argc, char *argv[])
          //deserialize
          map <string, int> *max_map = map_deserialize(max_buffer);
          
-         char *temp = itoa(rank);
-         string str_temp(temp);
-         
+//         char *temp = itoa(rank);
+         //       string str_temp(temp);
+         std::stringstream ss;
+         ss << rank;
+         std::string temp = ss.str();
+
          //add to map
-         max_buffer_map[str_temp] = *max_map;
+         max_buffer_map[temp] = *max_map;
          
          //get document counts from each node
          COMM_WORLD.Recv(&doc_buf_size, 1, MPI_INT, MPI_ANY_SOURCE, rank);
@@ -121,19 +125,21 @@ int main(int argc, char *argv[])
          map <string, int> *doc_map = map_deserialize(doc_buffer);
 
          //add to vector
-         doc_buffer_map[str_temp] = *doc_map;
+         doc_buffer_map[temp] = *doc_map;
       }
       
       //user doc & max vector
-      map <string, int> *global_max_map = max_term_finder(max_buffer_map);
+      //TODO listofwords is undefined
+      set<string> listOfWords;
+      map <string, int> *global_max_map = max_term_finder(max_buffer_map, listOfWords);
       
       //serialize
-      global_max_buf = map_serialize(global_max_map, &global_max_size);
+      global_max_buf = map_serialize(*global_max_map, &global_max_size);
       
       //document_freq
-      map <string, int> *global_doc_map = reduceDocumentFrequencies(*doc_buffer_map);
+      map <string, int> *global_doc_map = reduceDocumentFrequencies(doc_buffer_map);
 
-      global_doc_buf = map_serialize(global_doc_map, &global_doc_size);
+      global_doc_buf = map_serialize(*global_doc_map, &global_doc_size);
       
    } 
 
