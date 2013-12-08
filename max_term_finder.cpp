@@ -1,5 +1,5 @@
 /*
- * max_term_finder.c
+ * max_term_finder.cpp
  * 
  * For every word, it finds the max frequency across all documents.
  */
@@ -13,6 +13,7 @@
 #include <typeinfo>
 #include <utility>
 #include "file_hashing.hpp"
+#include "serialize_utility.hpp"
 
 using std::map;
 using std::string;
@@ -58,5 +59,7 @@ int main() {
    set<string> listOfWords;
    countDocumentsContainingWords(perFileWordCounts, listOfWords);
 
-   max_term_finder(perFileWordCounts, listOfWords);
+   map<string, int> *wordMaxes = max_term_finder(perFileWordCounts, listOfWords);
+
+   map_serialize(*wordMaxes);
 }
