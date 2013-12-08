@@ -52,6 +52,17 @@ map<string, int> countDocumentsContainingWords(map<string, map<string, int> >& w
    return documentCount;
 }
 
+void generateVocabulary(map<string, map<string, int> >& wordCounts, set<string>& listOfWords) {
+   using namespace std;
+   map<string, int> documentCount;
+   for(map<string, map<string, int> >::iterator it = wordCounts.begin(); it != wordCounts.end(); ++it) {
+      for(map<string,int>::iterator iter = (it->second).begin(); iter != (it->second).end(); ++iter) {
+         listOfWords.insert(iter->first);
+      }
+   }
+   return;
+}
+
 /*
 int main() {
    using namespace std;
