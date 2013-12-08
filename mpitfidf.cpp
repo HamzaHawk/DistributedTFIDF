@@ -7,14 +7,9 @@
 #include "max_term_finder.hpp"
 
 using namespace MPI;
-using std::map;
-using std::vector;
-using std::set;
-using std::string;
 
 int main(int argc, char *argv[]) 
-{
-   
+{   
    if (argc < 2) {
       printf("Usage: mpitfidf <file1> [.... <fileN>]\n");
       return 1;

@@ -1,15 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <map>
-#include <vector>
-#include <set>
-
 #include "file_hashing.hpp"
-using std::map;
-using std::vector;
-using std::set;
-using std::string;
 
 struct letter_only: std::ctype<char> 
 {
@@ -30,7 +19,7 @@ map<string, int> countWordsInFile(string filename) {
      map<string, int> wordCount;
      ifstream input;
      input.imbue(std::locale(std::locale(), new letter_only())); //enable reading only letters!
-     input.open(filename);
+     input.open(filename.c_str());
      string word;
      while(input >> word)
      {

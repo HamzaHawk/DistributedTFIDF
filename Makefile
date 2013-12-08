@@ -1,6 +1,6 @@
 CC=mpic++
 
-OBJ_FLAGS=-O -c -g
+OBJ_FLAGS=-O -c -g 
 LIBS=-lmpi
 
 all: mpitfidf.o

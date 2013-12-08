@@ -15,8 +15,12 @@
 #include <set>
 
 #define MASTER 0
-
 #define SUCCESS 0
 #define FAILURE 1
+
+using std::map;
+using std::vector;
+using std::set;
+using std::string;
 
 #endif
