@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
       for (i = 0; i < numFiles; i++) {
          // if index % numPRocs-1 +1 is equal to rank, process doc (omits master)
          if ((i%(numProcs-1) + 1) == me) {
-            printf("My Rank: %d, my files: %s\n", me, files[i]);
+//            printf("My Rank: %d, my files: %s\n", me, files[i]);
             
             //read document calculate tf for each document i
             map<string, int> wordCount = countWordsInFile(files[i]);
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
       //serialize
       int doc_size;
       char *doc_buf = map_serialize(docCounts, &doc_size);
-      printf("Sending document counts from %d\n", me);
+      //    printf("Sending document counts from %d\n", me);
       
 
       int doc_size_buf[2] = {doc_size, me};
@@ -107,13 +107,11 @@ int main(int argc, char *argv[])
       map <string, int> *global_doc_map = reduceDocumentFrequencies(doc_buffer_map);
 
       global_doc_buf = map_serialize(*global_doc_map, &global_doc_size);
-
-      printf("Global doc size: %d\n", global_doc_size);
       
    } 
    
    if (me == MASTER) {
-      printf("broadcasting....\n");
+      printf("Broadcasting....\n");
    }
    
    //broadcase global_doc_size
@@ -121,12 +119,7 @@ int main(int argc, char *argv[])
    
    //malloc space for buffers
    if (me != MASTER) {
-      printf("rank: %d, Global doc size: %d\n", me, global_doc_size);
       global_doc_buf = new char[global_doc_size];
-   }
-
-   if (me == MASTER) {
-      printf("broadcasting 2....\n");
    }
 
    //broadcast(global_doc_buf);
@@ -141,7 +134,6 @@ int main(int argc, char *argv[])
       map <string, int> *global_doc_map = map_deserialize(global_doc_buf);
 
       //tfidf
-      printf("Calculating on node %d\n", me);
       calculateTFIDFAndOutput(fileCounts, *global_doc_map, numFiles);
       
    }

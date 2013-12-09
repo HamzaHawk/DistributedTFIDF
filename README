@@ -1,0 +1,13 @@
+Distributed Term Frequency Inverse Document Frequency
+
+Bradley Zeller
+Andrew Sinclair
+Kimberly Paterson
+
+
+To make: 
+   run "make"
+
+To test on 3 nodes:
+   run "make test3nodes" from 302x14, otherwise you have to change the hostfile
+

@@ -12,5 +12,5 @@ mpitfidf: mpitfidf.cpp file_hashing.cpp max_term_finder.cpp document_frequency.c
 clean:
 	rm -rf mpitfidf *.o
 
-test16big:
-	time -p mpirun -n 3 --hostfile hostfile -mca btl_tcp_if_include eth0 ./mpitfidf 
+test3nodes:
+	time -p mpirun -n 3 --hostfile hostfile -mca btl_tcp_if_include eth0 ./mpitfidf ./data/news/* ./data/books/*
